@@ -12,7 +12,7 @@
 
 constexpr std::uint32_t kRuntime = (1u<<24)|(16u<<16)|(244u<<4);
 extern "C" __declspec(dllexport) SFSEPluginVersionData SFSEPlugin_Version = {
-    1, 65, "Enhanced Vehicles", "Local vehicle investigation", 0, 0,
+    1, 66, "Enhanced Vehicles", "Local vehicle investigation", 0, 0,
     {kRuntime, 0}, 0, 0, 0
 };
 
@@ -588,12 +588,24 @@ static void RememberLeadVehicle(void* reference,void* playerHigh,ULONGLONG now) 
     if(!reference || !Read<unsigned>(reference,0x28) || !Read<void*>(reference,0xB0) ||
        !PlayerDrivesTarget(playerHigh,ReferenceHandle(reference))) return;
     // v59: direct pursuit restored; route capture is disabled.
+    void* previous=nullptr;
     AcquireSRWLockExclusive(&leadLock);
-    if(leadVehicle!=reference) {RetainReference(reference);ReleaseReference(leadVehicle);leadVehicle=reference;}
+    if(leadVehicle!=reference) {RetainReference(reference);previous=leadVehicle;leadVehicle=reference;}
     bool first=!leadSeen;
     leadSeen=now;
     ReleaseSRWLockExclusive(&leadLock);
+    ReleaseReference(previous);
     if(first) {char line[100];snprintf(line,sizeof(line),"LEAD_REFERENCE bound from live input vehicle=%08X",Read<unsigned>(reference,0x28));Line(line);}
+}
+static void ReleaseStaleLeadVehicle(ULONGLONG now) {
+    void* expired=nullptr;
+    AcquireSRWLockExclusive(&leadLock);
+    if(leadVehicle && (!leadSeen || now<leadSeen || now-leadSeen>=2000)) {
+        expired=leadVehicle;leadVehicle=nullptr;leadSeen=0;
+    }
+    ReleaseSRWLockExclusive(&leadLock);
+    // An in-flight snapshot owns its separate reference until its work ends.
+    ReleaseReference(expired);
 }
 static void* SnapshotLead(ULONGLONG now) {
     AcquireSRWLockShared(&leadLock);
@@ -1009,6 +1021,7 @@ static void ObserveDirectPhysics(void* vehicle);
 class ExitWatch final : public SFSETaskInterface::ITaskDelegate {
 public:
     void Run() override {
+        ReleaseStaleLeadVehicle(GetTickCount64());
         TickDriverMotion();
         ObserveDriverDeadline();
         AcquireSRWLockShared(&driverLock);
@@ -1340,7 +1353,7 @@ extern "C" __declspec(dllexport) bool SFSEPlugin_Load(const SFSEInterface* sfse)
     *lastSlash=L'\0';
     wcscat_s(experimentPath,L"\\Data\\SFSE\\Plugins\\RV8PassengerExperiment.enabled");
     passengerExperiment=GetFileAttributesW(experimentPath)!=INVALID_FILE_ATTRIBUTES;
-    Line(passengerExperiment ? "LOAD v65; parked follower orders; full geometry selection and animated exit experiment" : "LOAD v65; parked follower orders; trace only; passenger experiment disabled");
+    Line(passengerExperiment ? "LOAD v66; bounded longer reverse; stale lead ownership expiry; native boost experiment" : "LOAD v66; trace only; passenger experiment disabled");
     auto tasks=static_cast<SFSETaskInterface*>(sfse->QueryInterface(kInterface_Task));
     if(passengerExperiment && (!tasks || tasks->interfaceVersion<1 || !tasks->AddTaskPermanent)) {
         Line("REJECT task interface unavailable; no hooks installed");return false;

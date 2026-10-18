@@ -2,7 +2,7 @@
 
 NPC-driven convoys, additional vehicles and passenger-seat management for Starfield PC. This repository publishes the current experimental source and research so other modders can review, reproduce and improve it.
 
-**Development snapshot, not a stable public release.** Current source: controller v63, native v65, consolidated plugin records v61. See [status and known issues](docs/STATUS.md) before testing. There is no prebuilt DLL or compiled Papyrus package in this initial source publication.
+**Development snapshot, not a stable public release.** Current source: controller v63, native v66, consolidated plugin records v61. The v66 reverse/cache changes pass local tests but still need game validation. See [status and known issues](docs/STATUS.md) before testing. There is no prebuilt DLL or compiled Papyrus package in this source publication.
 
 ## Current scope
 
@@ -47,3 +47,5 @@ Vehicle Controller provides Deploy/Recall and Convoy controls. General preferenc
 Start with [research and seat authoring](docs/ENHANCED-VEHICLES-RESEARCH.md), [machine-readable seat contract](docs/SEAT-CONTRACT.json), [lifecycle audit](docs/VEHICLE-LIFECYCLE-AUDIT.md) and [contribution guidance](CONTRIBUTING.md). Native addresses are version-specific research leads, not supported game APIs. The strict player-trail experiment was withdrawn from active navigation after poor terrain behavior; its inactive code remains for study.
 
 Project-authored source is MIT licensed. MinHook and the SFSE header retain their included notices. No code or assets from Vehicle Mod Overhaul WIP have been incorporated; [its source review](docs/VEHICLE-OVERHAUL-REFERENCE-REVIEW.md) records research leads only.
+
+See the [detailed comparison and hover/AI analysis](docs/OVERHAUL-DEEP-REVIEW.md) and [vehicle disablement research](docs/VEHICLE-DISABLE-RESEARCH.md) for the current investigation and planned integrations.

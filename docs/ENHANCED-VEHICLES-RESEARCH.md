@@ -1,6 +1,6 @@
 # Enhanced Vehicles: vehicle systems, native findings and authoring contract
 
-Research updated 17 October 2026. Runtime inspected: Starfield PC 1.16.244.0, SFSE 0.2.21. Current source baseline: controller v63, native v65 and consolidated plugin records from v61. The controller and native sources compile; local native fixtures pass. Prior gameplay observations and current unresolved issues are separated below and in STATUS.md. Native symbols are descriptive aliases, not recovered Bethesda source names. Addresses are executable-relative RVAs, not portable APIs.
+Research updated 17 October 2026. Runtime inspected: Starfield PC 1.16.244.0, SFSE 0.2.21. Current source baseline: controller v63, native v66 and consolidated plugin records from v61. The controller and native sources compile; local native fixtures pass. Native v66 reverse/cache changes still need game validation. Prior gameplay observations and current unresolved issues are separated below and in STATUS.md. Native symbols are descriptive aliases, not recovered Bethesda source names. Addresses are executable-relative RVAs, not portable APIs.
 
 ## 1. What this research establishes
 

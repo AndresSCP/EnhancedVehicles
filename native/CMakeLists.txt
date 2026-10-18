@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(EnhancedVehicles VERSION 0.0.65 LANGUAGES C CXX)
+project(EnhancedVehicles VERSION 0.0.66 LANGUAGES C CXX)
 if(NOT WIN32 OR NOT MSVC OR NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
   message(FATAL_ERROR "Build with Visual Studio x64 on Windows.")
 endif()

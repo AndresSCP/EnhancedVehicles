@@ -298,8 +298,10 @@ static bool CanRearmReverseRecovery(const VehiclePose& origin,const VehiclePose&
     return tried && origin.valid && pose.valid && previousUntil && now>previousUntil &&
         now-previousUntil>=15000 && std::hypot(pose.x-origin.x,pose.y-origin.y)>=6.0f;
 }
+constexpr ULONGLONG kReverseRecoveryDurationMs=1600;
+constexpr float kReverseRecoveryTravel=3.0f;
 static bool ReverseRecoveryActive(const VehiclePose& origin,const VehiclePose& pose,ULONGLONG until,ULONGLONG now) {
-    return until>now && until-now<=800 && origin.valid && pose.valid && std::hypot(pose.x-origin.x,pose.y-origin.y)<1.5f && std::fabs(pose.z-origin.z)<0.75f;
+    return until>now && until-now<=kReverseRecoveryDurationMs && origin.valid && pose.valid && std::hypot(pose.x-origin.x,pose.y-origin.y)<kReverseRecoveryTravel && std::fabs(pose.z-origin.z)<0.75f;
 }
 // Kinematic eligibility is not an obstacle/terrain visibility query.
 // Only three short catch-up pulses per session; never jump or fire here.
@@ -454,7 +456,7 @@ static void TickDriverMotion() {
                         }
                         if(moved) driverProbe.assistAttempts=0;
                         if(assist) {driverProbe.assistUntil=now+900;driverProbe.assistAttempts++;record.assistUntil=driverProbe.assistUntil;}
-                        if(recover) {driverProbe.reverseTried=true;driverProbe.reverseUntil=now+800;driverProbe.reverseOrigin=pose;record.reverseUntil=driverProbe.reverseUntil;record.reverseOrigin=pose;}
+                        if(recover) {driverProbe.reverseTried=true;driverProbe.reverseUntil=now+kReverseRecoveryDurationMs;driverProbe.reverseOrigin=pose;record.reverseUntil=driverProbe.reverseUntil;record.reverseOrigin=pose;}
                     }
                     ReleaseSRWLockExclusive(&driverLock);
                     if(jump) Line("CONVOY_VERTICAL_RECOVERY one bounded pulse after forward and reverse attempts failed");

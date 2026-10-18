@@ -10,6 +10,8 @@ Issue found: NamedExtraVehicles retains one reference after each successful nami
 
 Controller v60 candidate removes historical naming references after recall and rebuilds the naming array at initialization/load from current ExtraVehicles membership, excluding nulls and duplicates. Numbering is preserved and existing vehicles are not renumbered. Papyrus compilation passed. This candidate is staged only, not installed or tested in game. Existing occupied-save recovery is outside this change's scope.
 
+Subsequent status: the naming cleanup is included in the installed/tested controller v63 lineage. Its presence does not establish a measured handle-usage plateau. Native v66 source also expires the retained lead owner after its two-second observation lease and releases replaced owners outside the lock; local fixtures verify outstanding snapshots remain valid and ownership balances. That native change is not yet installed/game-tested at this review.
+
 Native state is bounded in the inspected implementation: eight tracked passenger entries, one driver registry, eight calibration identities (numeric values, not retained vehicle pointers), and one retained lead vehicle replaced when another valid lead is observed. The lead's reference may remain retained after observation expires; this is one slot, not an unbounded deployment history. Trail runtime capture/target selection is disabled in v59. Local reference-balance fixtures do not replace an in-game memory profile.
 
 Do not describe the mod as leak-free or give a memory budget without measurement. Long-session CPU activity, loaded vehicle assets/physics, engine caching, persistent save records and retained script/native references are different costs and require separate observation.

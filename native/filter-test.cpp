@@ -779,6 +779,18 @@ int main() {
     put(inputReference,0x28,unsigned{0xFF000000});assert(!ResolveInputReference(0xFF111234));
     put(inputReference,0x28,unsigned{0xFF111234});put(inputFormTable,0x230,static_cast<void*>(nullptr));assert(!ResolveInputReference(0xFF111234));
     inputFormLookup=nullptr;
+    assert(!leadVehicle && !leadSeen);
+    RetainReference(inputReference);leadVehicle=inputReference;leadSeen=1000;
+    ReleaseStaleLeadVehicle(2999);assert(leadVehicle==inputReference);
+    auto heldLead=SnapshotLead(2999);assert(heldLead==inputReference);
+    assert(Read<std::uint64_t>(inputReference,8)==2*0x80000200001ULL);
+    ReleaseStaleLeadVehicle(3000);assert(!leadVehicle && !leadSeen);
+    assert(Read<std::uint64_t>(inputReference,8)==0x80000200001ULL);
+    ReleaseReference(heldLead);assert(Read<std::uint64_t>(inputReference,8)==0);
+    ReleaseStaleLeadVehicle(9999);assert(Read<std::uint64_t>(inputReference,8)==0);
+    RetainReference(inputReference);leadVehicle=inputReference;leadSeen=9000;
+    ReleaseStaleLeadVehicle(8999);assert(!leadVehicle && !leadSeen && Read<std::uint64_t>(inputReference,8)==0);
+    puts("PASS: stale lead ownership expires at the lease boundary without invalidating a retained snapshot; repeated expiry and reversed time release exactly once.");
     puts("PASS: live-input lookup resolves the exact FormID through AsReference2 and rejects zero, missing forms, mismatched identity and missing conversion method.");
 
     car={0,0,0,0,true};target={20,0,0,0,true};
@@ -828,7 +840,10 @@ int main() {
     assert(!CanRearmReverseRecovery(initial,{0,6.0f,0,0,true},1800,1700,true));
     assert(ReverseRecoveryActive(initial,initial,1800,1000));
     assert(!ReverseRecoveryActive(initial,initial,1800,1800));
-    assert(!ReverseRecoveryActive(initial,{0,1.6f,0,0,true},1800,1100));
+    assert(ReverseRecoveryActive(initial,{0,1.6f,0,0,true},1800,1100));
+    assert(ReverseRecoveryActive(initial,{0,2.9f,0,0,true},2600,1000));
+    assert(!ReverseRecoveryActive(initial,{0,3.0f,0,0,true},2600,1100));
+    assert(!ReverseRecoveryActive(initial,initial,2601,1000));
     assert(!ReverseRecoveryActive(initial,{0,0,1,0,true},1800,1100));
     puts("PASS: reverse payload excludes concurrent forward input and special actions; recovery requires exhausted attempts, rejects repeat/moving/close cases, and ends by time, displacement or height.");
 
