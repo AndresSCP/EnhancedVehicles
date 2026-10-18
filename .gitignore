@@ -1,0 +1,21 @@
+# Local build products and runtime artifacts
+**/build/
+**/out/
+**/.vs/
+*.dll
+*.exe
+*.pdb
+*.obj
+*.lib
+*.exp
+*.pex
+*.log
+*.zip
+*.7z
+*.ess
+*.sfse
+*.user
+*.suo
+local.*
+.env
+.env.*

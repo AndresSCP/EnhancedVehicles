@@ -1,0 +1,6 @@
+* text=auto
+*.esm binary
+*.esp binary
+*.psc text eol=crlf
+# Preserve the upstream header verbatim, including its original whitespace.
+native/PluginAPI.h -whitespace

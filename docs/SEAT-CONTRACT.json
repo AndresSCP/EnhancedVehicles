@@ -1,0 +1,42 @@
+{
+  "plugin": "EnhancedVehicles.esm",
+  "editorAlternative": "EnhancedVehicles.esp",
+  "requiredRuntimeOfficialContent": "SFBGS004.esm",
+  "roles": [
+    {
+      "marker": 0,
+      "role": "driver",
+      "plugin": "SFBGS004.esm",
+      "localID": "000019"
+    },
+    {
+      "marker": 1,
+      "role": "front passenger",
+      "plugin": "SFBGS004.esm",
+      "localID": "00001D"
+    },
+    {
+      "marker": 2,
+      "role": "Vasco; excluded from humans",
+      "plugin": "SFBGS004.esm",
+      "localID": "00001C"
+    },
+    {
+      "marker": 3,
+      "role": "extra human right",
+      "plugin": "EnhancedVehicles.esm",
+      "localID": "000822",
+      "editorID": "EVExtraHumanSeat1"
+    },
+    {
+      "marker": 4,
+      "role": "extra human left",
+      "plugin": "EnhancedVehicles.esm",
+      "localID": "000823",
+      "editorID": "EVExtraHumanSeat2"
+    }
+  ],
+  "arbitraryMarkersSupported": false,
+  "demoVehicleIncluded": false,
+  "saveMigrationSupported": false
+}
